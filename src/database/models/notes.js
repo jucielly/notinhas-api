@@ -1,7 +1,7 @@
 const { DataTypes } = require('sequelize');
 const { sequelize } = require('../connection');
 
-const UserNotes = sequelize.define('userFavorites', {
+const UserNotes = sequelize.define('userNotes', {
   id: {
     type: DataTypes.INTEGER,
     primaryKey: true,
