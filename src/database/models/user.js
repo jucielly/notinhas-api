@@ -1,6 +1,7 @@
 const { DataTypes } = require('sequelize');
 const { sequelize } = require('../connection');
 const UserNotes = require('./notes');
+const ArchivedNotes = require('./notes');
 
 const User = sequelize.define('user', {
   id: {
@@ -23,5 +24,6 @@ const User = sequelize.define('user', {
 });
 
 User.hasMany(UserNotes);
+User.hasMany(ArchivedNotes);
 
 module.exports = User;
