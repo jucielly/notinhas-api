@@ -27,7 +27,7 @@ class UserService {
       return false;
     }
 
-    return false;
+    return true;
   }
 
   static createUser(user) {
@@ -44,19 +44,19 @@ class UserService {
     });
   }
 
-  //   static login(email, password) {
-  //     if (!email || !password) throw new ClientError('Preencha email ou senha');
+  static login(email, password) {
+    if (!email || !password) throw new ClientError('Preencha email ou senha');
 
-  //     return User.findOne({
-  //       where: {
-  //         email,
-  //       },
-  //     }).then((user) => {
-  //       if (!user) throw new AuthError('Usuario ou senha incorretos');
-  //     }).catch((error) => {
+    return User.findOne({
+      where: {
+        email,
+      },
+    }).then((user) => {
+      if (!user) throw new AuthError('Usuario ou senha incorretos');
+    }).catch((error) => {
 
-//     });
-//   }
+    });
+  }
 }
 
 module.exports = UserService;
