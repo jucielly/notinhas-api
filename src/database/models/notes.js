@@ -9,6 +9,7 @@ const UserNotes = sequelize.define('userNotes', {
   },
   title: {
     type: DataTypes.STRING,
+    allowNull: true,
   },
 
   content: {
