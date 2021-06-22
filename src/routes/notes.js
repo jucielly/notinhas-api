@@ -18,4 +18,16 @@ NotesRouter.post('/', [authorizationMiddleware, (request, response, next) => {
   });
 }]);
 
+NotesRouter.patch('/:id', [authorizationMiddleware, (request, response, next) => {
+  const { title, content } = request.body || {};
+  const { id: noteId } = request.params || {};
+
+  NoteService.editNote({
+    title,
+    content,
+    noteId,
+  }).then((editedNote) => response.json(editedNote))
+    .catch(next);
+}]);
+
 module.exports = NotesRouter;
