@@ -67,6 +67,43 @@ class UserService {
       throw error;
     });
   }
+
+  static editUser({ user, userId, currentPassword }) {
+    if (!this.validateUser(user, false)) throw new ClientError('Dados inválidos');
+    const { name, email, password } = user;
+    const updatedUser = {};
+    if (name) updatedUser.name = name;
+    if (email) updatedUser.email = email;
+    if (password) updatedUser.passwordHash = bcrypt.hashSync(password, env.saltRounds);
+
+    return User.findByPk(userId).then((foundUser) => {
+      if (!foundUser) throw new ClientError('Usuário não encontrado');
+      const passWordMatch = bcrypt.compareSync(currentPassword, foundUser.passwordHash);
+      if (!passWordMatch) throw new AuthError('Senha incorreta');
+
+      return foundUser.update(updatedUser).then((result) => {
+        // eslint-disable-next-line no-shadow
+        const updatedUser = result.toJSON();
+        updatedUser.passwordHash = undefined;
+        return updatedUser;
+      });
+    }).catch((error) => {
+      if (!error.httpCode) throw new ServerError('Ocorreu um erro ao autorizar o usuário');
+      throw error;
+    });
+  }
+
+  static getUser(userId) {
+    return User.findByPk(userId).then((user) => {
+      if (!user) throw new ClientError('Usuário não encontrado');
+      const userWithoutHash = user.toJSON();
+      userWithoutHash.passwordHash = undefined;
+      return userWithoutHash;
+    }).catch((error) => {
+      if (!error.httpCode) throw new ServerError('Ocorreu um erro ao obter o usuário');
+      throw error;
+    });
+  }
 }
 
 module.exports = UserService;
