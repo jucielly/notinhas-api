@@ -52,9 +52,19 @@ class UserService {
         email,
       },
     }).then((user) => {
-      if (!user) throw new AuthError('Usuario ou senha incorretos');
-    }).catch((error) => {
+      if (!user) throw new AuthError('Usuário ou senha incorretos');
+      const { passwordHash, ..userWithoutHash } = user.toJSON();
+      const passWordMatch = bcrypt.compareSync(password, passwordHash);
+      if (!passWordMatch) throw new AuthError('Usuário ou senha incorretos');
+      const token = TokenService.sign(userWithoutHash)
 
+      return{
+        user: userWithoutHash,
+        token,
+      }
+    }).catch((error) => {
+      if (!error.httpCode) throw new ServerError('Erro ao obter credenciais');
+      throw error;
     });
   }
 }
