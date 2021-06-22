@@ -10,4 +10,11 @@ userRouter.post('/', (request, response, next) => {
   }).catch(next);
 });
 
+userRouter.post('/login', (request, response, next) => {
+  const { email, password } = request.body || {};
+  UserService.login(email, password).then((authResponse) => {
+    response.json(authResponse);
+  }).catch(next);
+});
+
 module.exports = userRouter;
