@@ -1,3 +1,4 @@
+const { Op } = require('sequelize');
 const NoteError = require('../errors/clientError');
 const NotFoundError = require('../errors/notFound');
 const UserNotes = require('../database/models/notes');
@@ -44,6 +45,25 @@ class NoteService {
     }).then((note) => {
       if (!note) throw new NotFoundError('Nota não encontrada');
       return note.destroy();
+    });
+  }
+
+  static getUserNotes(userId) {
+    return UserNotes.findAll({
+      where: {
+        userId: +userId,
+      },
+    });
+  }
+
+  static searchNote(userId, search) {
+    return UserNotes.findAll({
+      where: {
+        userId: +userId,
+        content: {
+          [Op.substring]: search,
+        },
+      },
     });
   }
 }
