@@ -1,7 +1,6 @@
 const express = require('express');
 const UserService = require('../services/user');
 const env = require('../config/env');
-const ServerError = require('../errors/serverError');
 const authorizationMiddleware = require('../middlewares/authorization');
 
 const userRouter = express.Router();
