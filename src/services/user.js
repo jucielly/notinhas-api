@@ -1,7 +1,6 @@
 const bcrypt = require('bcrypt');
 const User = require('../database/models/user');
 const ClientError = require('../errors/clientError');
-const serverError = require('../errors/serverError');
 const env = require('../config/env');
 const TokenService = require('./token');
 const AuthError = require('../errors/authError');
