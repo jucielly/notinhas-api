@@ -30,4 +30,11 @@ NotesRouter.patch('/:id', [authorizationMiddleware, (request, response, next) =>
     .catch(next);
 }]);
 
+NotesRouter.delete('/:id', [authorizationMiddleware, (request, response, next) => {
+  const { id: noteId } = request.params || {};
+  NoteService.deleteNote(noteId).then(() => {
+    response.sendStatus(204);
+  }).catch(next);
+}]);
+
 module.exports = NotesRouter;
