@@ -4,9 +4,9 @@ const env = require('../config/env');
 const ServerError = require('../errors/serverError');
 const authorizationMiddleware = require('../middlewares/authorization');
 
-const NotesRouter = express.Router();
+const notesRouter = express.Router();
 
-NotesRouter.post('/', [authorizationMiddleware, (request, response, next) => {
+notesRouter.post('/', [authorizationMiddleware, (request, response, next) => {
   const { title, content } = request.body || {};
   const userId = request.user.id;
   const note = { title, content };
@@ -18,7 +18,7 @@ NotesRouter.post('/', [authorizationMiddleware, (request, response, next) => {
   });
 }]);
 
-NotesRouter.patch('/:id', [authorizationMiddleware, (request, response, next) => {
+notesRouter.patch('/:id', [authorizationMiddleware, (request, response, next) => {
   const { title, content } = request.body || {};
   const { id: noteId } = request.params || {};
 
@@ -30,11 +30,33 @@ NotesRouter.patch('/:id', [authorizationMiddleware, (request, response, next) =>
     .catch(next);
 }]);
 
-NotesRouter.delete('/:id', [authorizationMiddleware, (request, response, next) => {
+notesRouter.delete('/:id', [authorizationMiddleware, (request, response, next) => {
   const { id: noteId } = request.params || {};
   NoteService.deleteNote(noteId).then(() => {
     response.sendStatus(204);
   }).catch(next);
 }]);
 
-module.exports = NotesRouter;
+notesRouter.get('/all', [authorizationMiddleware, (request, response, next) => {
+  const userId = request.user.id;
+  NoteService.getUserNotes(userId).then((data) => {
+    response.json(data);
+  }).catch((error) => {
+    next(new ServerError('ocorreu um erro inesperado'));
+    console.error(error);
+  });
+}]);
+
+notesRouter.get('/', [authorizationMiddleware, (request, response, next) => {
+  const userId = request.user.id;
+  const { search } = request.query || {};
+
+  NoteService.searchNote(userId, search).then((data) => {
+    response.json(data);
+  }).catch((error) => {
+    next(new ServerError('ocorreu um erro inesperado'));
+    console.error(error);
+  });
+}]);
+
+module.exports = notesRouter;

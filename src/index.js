@@ -4,7 +4,7 @@ const cors = require('cors');
 const env = require('./config/env');
 const { startDb } = require('./database');
 const userRouter = require('./routes/user');
-const NotesRouter = require('./routes/notes');
+const notesRouter = require('./routes/notes');
 const errorHandler = require('./middlewares/error');
 
 const app = express();
@@ -13,7 +13,7 @@ app.use(cors());
 app.use(express.json());
 
 app.use('/users', userRouter);
-app.use('/notes', NotesRouter);
+app.use('/notes', notesRouter);
 
 app.use(errorHandler);
 
